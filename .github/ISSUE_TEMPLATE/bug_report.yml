@@ -1,0 +1,28 @@
+name: "🐛 Bug"
+description: "버그 수정"
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: 📄 버그 설명
+      description: 버그에 대한 설명을 작성해 주세요.
+      placeholder: 자세히 적을수록 좋습니다!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✅ 버그 발생 상황/환경
+      description: 버그 발생 상황/환경을 작성해주세요.
+      placeholder: (가능하면) Given-When-Then 형식으로 서술해주세요
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🔍 예상 결과
+      description: 예상했던 정상적인 결과가 어떤 것이었는지 설명해주세요.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🙋🏻 참고 자료
+      description: 참고 자료가 있다면 작성해 주세요.
