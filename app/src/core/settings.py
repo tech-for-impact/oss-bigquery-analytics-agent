@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     AZURE_OPENAI_DEPLOYMENT_NAME: str = "gpt-4o-mini"   
 
     # BigQuery 관련 설정
-    BIGQUERY_API_URL: str = "https://cj4kuwz1oh.execute-api.ap-northeast-2.amazonaws.com"
+    BIGQUERY_API_URL: str = ""
     BIGQUERY_DATABASE: str
     GOOGLE_APPLICATION_CREDENTIALS: str 
     BIGQUERY_PROJECT_ID: str
