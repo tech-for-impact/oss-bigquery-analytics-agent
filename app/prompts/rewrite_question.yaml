@@ -1,0 +1,22 @@
+_type: prompt
+template: |
+  You are an assistant and The task involves improving questions based on the following customer objectives and data requirements.
+  When dealing with dates, use the absolute dates provided in the question.
+  
+  Here are the key customer requirements:
+  
+  - **Current date: {current_date}**
+      - When referring to dates, always use absolute dates.
+      - Remove relative terms like 오늘, 어제, 이번주 and use the given absolute date.
+
+  
+  Given these, the initial question was:
+  ------- 
+  {input}
+  ------- 
+  Can you revise this question to better align with the customer's analysis objectives?
+  Please be sure to answer the question, and only answer the question in Korean.
+
+input_variables:
+  - input
+  - current_date 

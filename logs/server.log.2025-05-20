@@ -1,0 +1,127 @@
+[2025-05-20 16:03:15,046] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:03:15,047] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:04:02,453] INFO     >> main.py:33 - Received chat request: {"messages":[{"type":"human","content":"2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘"}],"chat_id":"","org_table_name":"medium_sample"}
+[2025-05-20 16:04:02,454] INFO     >> sql_chain.py:27 - Input to convert_messages: {'messages': [{'type': 'human', 'content': '2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘'}], 'chat_id': '', 'org_table_name': 'medium_sample'}
+[2025-05-20 16:04:02,454] INFO     >> sql_chain.py:56 - Converted state for graph: {'messages': [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})], 'org_table_name': 'medium_sample', 'chat_id': '', 'SQLquery': None, 'answer': None, 'state': None}
+[2025-05-20 16:04:02,457] INFO     >> graph.py:45 - MessageHistory : [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})]
+[2025-05-20 16:04:03,153] INFO     >> graph.py:63 - categorized : SQLquery
+[2025-05-20 16:04:04,740] INFO     >> graph.py:143 - transfer_date : 2025년 1월 1일부터 2025년 1월 31일까지 “네이버 / 자연검색” 채널의 방문자 수를 알려주세요.
+[2025-05-20 16:04:05,817] INFO     >> graph.py:120 - judged_sql_query : true
+[2025-05-20 16:04:05,819] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:04:05,851] ERROR    >> main.py:50 - Error in chat endpoint: "Input to ChatPromptTemplate is missing variables {'schema', 'table_name', 'examples'}.  Expected: ['examples', 'input', 'schema', 'table_name'] Received: ['messages', 'input']\nNote: if you intended {schema} to be part of the string and not a variable, please escape it with double curly braces like: '{{schema}}'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT "
+Traceback (most recent call last):
+  File "/home/acorn/oss-bigquery-analytics-agent/app/src/main.py", line 43, in handle_chat_request
+    response_content = await chat_chain_runnable.ainvoke(input_data_for_chain)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/base.py", line 4756, in ainvoke
+    return await self._acall_with_config(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/base.py", line 1981, in _acall_with_config
+    output = await coro
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/base.py", line 4680, in _ainvoke
+    output = await acall_func_with_variable_args(
+  File "/home/acorn/oss-bigquery-analytics-agent/app/src/workflows/sql_chain.py", line 65, in run_chain
+    result_state = await graph.ainvoke(state)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/pregel/__init__.py", line 2428, in ainvoke
+    async for chunk in self.astream(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/pregel/__init__.py", line 2313, in astream
+    async for _ in runner.atick(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/pregel/runner.py", line 444, in atick
+    await arun_with_retry(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/pregel/retry.py", line 128, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/utils/runnable.py", line 583, in ainvoke
+    input = await step.ainvoke(input, config, **kwargs)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langgraph/utils/runnable.py", line 373, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/config.py", line 588, in run_in_executor
+    return await asyncio.get_running_loop().run_in_executor(
+  File "/DATA/acorn/acornEnv/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/config.py", line 579, in wrapper
+    return func(*args, **kwargs)
+  File "/home/acorn/oss-bigquery-analytics-agent/app/src/workflows/graph.py", line 165, in transfer_TextToSQL
+    state["SQLquery"] = chain.invoke({
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/base.py", line 3027, in invoke
+    input = context.run(step.invoke, input, config, **kwargs)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/prompts/base.py", line 210, in invoke
+    return self._call_with_config(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/base.py", line 1927, in _call_with_config
+    context.run(
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/runnables/config.py", line 396, in call_func_with_variable_args
+    return func(input, **kwargs)  # type: ignore[call-arg]
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/prompts/base.py", line 184, in _format_prompt_with_error_handling
+    _inner_input = self._validate_input(inner_input)
+  File "/DATA/acorn/acornEnv/lib/python3.10/site-packages/langchain_core/prompts/base.py", line 178, in _validate_input
+    raise KeyError(
+KeyError: "Input to ChatPromptTemplate is missing variables {'schema', 'table_name', 'examples'}.  Expected: ['examples', 'input', 'schema', 'table_name'] Received: ['messages', 'input']\nNote: if you intended {schema} to be part of the string and not a variable, please escape it with double curly braces like: '{{schema}}'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/INVALID_PROMPT_INPUT "
+[2025-05-20 16:04:28,856] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:04:28,856] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:04:37,011] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:04:37,011] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:06:07,814] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:06:07,815] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:06:13,750] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:06:13,750] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:09:59,855] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:09:59,856] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:15:31,730] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:15:31,730] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:16:37,213] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:16:37,213] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:16:39,849] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:16:39,850] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:16:53,507] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:16:53,508] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:17:25,038] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:17:25,038] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:17:26,157] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:17:26,157] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:26:03,114] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:26:03,114] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:26:14,071] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:26:14,072] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:26:19,778] INFO     >> main.py:40 - Received chat request: {"input":{"messages":[{"type":"human","content":"2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘"}],"org_table_name":"medium_sample","chat_id":""},"config":{},"kwargs":{}}
+[2025-05-20 16:26:19,779] INFO     >> sql_chain.py:27 - Input to convert_messages: {'messages': [{'type': 'human', 'content': '2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘'}], 'chat_id': '', 'org_table_name': 'medium_sample'}
+[2025-05-20 16:26:19,779] INFO     >> sql_chain.py:56 - Converted state for graph: {'messages': [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})], 'org_table_name': 'medium_sample', 'chat_id': '', 'SQLquery': None, 'answer': None, 'state': None}
+[2025-05-20 16:26:19,782] INFO     >> graph.py:45 - MessageHistory : [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})]
+[2025-05-20 16:26:21,191] INFO     >> graph.py:63 - categorized : SQLquery
+[2025-05-20 16:26:22,237] INFO     >> graph.py:143 - transfer_date : 2025년 1월 1일부터 2025년 1월 31일까지 “네이버 / 자연검색” 채널의 방문자 수를 알려주세요.
+[2025-05-20 16:26:22,994] INFO     >> graph.py:120 - judged_sql_query : true
+[2025-05-20 16:26:22,997] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:26:24,823] INFO     >> sql_chain.py:67 - Answer from graph: True
+[2025-05-20 16:41:21,309] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:41:21,310] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:42:24,863] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:42:24,863] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:42:26,914] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:42:26,915] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:42:33,367] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:42:33,367] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:51:15,271] INFO     >> main.py:40 - Received chat request: {"input":{"messages":[{"type":"human","content":"2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘"}],"org_table_name":"medium_sample","chat_id":""},"config":{},"kwargs":{}}
+[2025-05-20 16:51:15,271] INFO     >> sql_chain.py:27 - Input to convert_messages: {'messages': [{'type': 'human', 'content': '2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘'}], 'chat_id': '', 'org_table_name': 'medium_sample'}
+[2025-05-20 16:51:15,272] INFO     >> sql_chain.py:56 - Converted state for graph: {'messages': [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})], 'org_table_name': 'medium_sample', 'chat_id': '', 'SQLquery': None, 'answer': None, 'state': None}
+[2025-05-20 16:51:15,274] INFO     >> graph.py:45 - MessageHistory : [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})]
+[2025-05-20 16:51:16,225] INFO     >> graph.py:63 - categorized : SQLquery
+[2025-05-20 16:51:17,467] INFO     >> graph.py:143 - transfer_date : 2025년 1월 1일부터 2025년 1월 31일까지 “네이버 / 자연검색” 채널의 방문자 수를 알려주세요.
+[2025-05-20 16:51:18,214] INFO     >> graph.py:120 - judged_sql_query : true
+[2025-05-20 16:51:18,216] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:51:19,720] INFO     >> sql_chain.py:67 - Answer from graph: True
+[2025-05-20 16:51:22,069] INFO     >> settings.py:39 - LLM 제공자: openai
+[2025-05-20 16:51:22,069] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:51:22,145] INFO     >> main.py:40 - Received chat request: {"input":{"messages":[{"type":"human","content":"2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘"}],"org_table_name":"medium_sample","chat_id":""},"config":{},"kwargs":{}}
+[2025-05-20 16:51:22,145] INFO     >> sql_chain.py:27 - Input to convert_messages: {'messages': [{'type': 'human', 'content': '2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘'}], 'chat_id': '', 'org_table_name': 'medium_sample'}
+[2025-05-20 16:51:22,146] INFO     >> sql_chain.py:56 - Converted state for graph: {'messages': [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})], 'org_table_name': 'medium_sample', 'chat_id': '', 'SQLquery': None, 'answer': None, 'state': None}
+[2025-05-20 16:51:22,147] INFO     >> graph.py:45 - MessageHistory : [HumanMessage(content='2025년 1월 ”네이버 / 자연검색” 채널의 방문자 수 알려줘', additional_kwargs={}, response_metadata={})]
+[2025-05-20 16:51:22,773] INFO     >> graph.py:63 - categorized : SQLquery
+[2025-05-20 16:51:23,796] INFO     >> graph.py:143 - transfer_date : 2025년 1월 1일부터 2025년 1월 31일까지 “네이버 / 자연검색” 채널의 방문자 수를 알려주세요.
+[2025-05-20 16:51:24,461] INFO     >> graph.py:120 - judged_sql_query : true
+[2025-05-20 16:51:24,463] INFO     >> factory.py:68 - LLM 인스턴스 생성: provider=openai, model=gpt-4o-mini
+[2025-05-20 16:51:26,009] INFO     >> sql_chain.py:67 - Answer from graph: True
+[2025-05-20 16:51:30,776] INFO     >> main.py:40 - Received chat request: {"input":{"messages":[{"type":"human","content":"오늘 집에서서 뭐함함함"}],"org_table_name":"medium_sample","chat_id":""},"config":{},"kwargs":{}}
+[2025-05-20 16:51:30,777] INFO     >> sql_chain.py:27 - Input to convert_messages: {'messages': [{'type': 'human', 'content': '오늘 집에서서 뭐함함함'}], 'chat_id': '', 'org_table_name': 'medium_sample'}
+[2025-05-20 16:51:30,777] INFO     >> sql_chain.py:56 - Converted state for graph: {'messages': [HumanMessage(content='오늘 집에서서 뭐함함함', additional_kwargs={}, response_metadata={})], 'org_table_name': 'medium_sample', 'chat_id': '', 'SQLquery': None, 'answer': None, 'state': None}
+[2025-05-20 16:51:30,779] INFO     >> graph.py:45 - MessageHistory : [HumanMessage(content='오늘 집에서서 뭐함함함', additional_kwargs={}, response_metadata={})]
+[2025-05-20 16:51:31,446] INFO     >> graph.py:63 - categorized : out_of_scope
+[2025-05-20 16:51:31,448] INFO     >> graph.py:88 - roll_base_answer : answer="😅 제가 아는 분야가 아니에요! 저는 후원 데이터 분석 전문가랍니다!
+예: '지난주 youtube / video 채널의 방문자 수 알려줘' 같은 질문을 해보세요!", messages="[HumanMessage(content='오늘 집에서서 뭐함함함', additional_kwargs={}, response_metadata={})]"
+[2025-05-20 16:51:31,449] INFO     >> sql_chain.py:67 - Answer from graph: 😅 제가 아는 분야가 아니에요! 저는 후원 데이터 분석 전문가랍니다!
+예: '지난주 youtube / video 채널의 방문자 수 알려줘' 같은 질문을 해보세요!
