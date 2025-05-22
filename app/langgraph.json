@@ -3,5 +3,8 @@
   "graphs": {
     "agent": "./src/react_agent/graph.py:graph"
   },
+  "http": {
+    "app": "./src/agent/app.py:app"
+  },
   "env": ".env"
 }
