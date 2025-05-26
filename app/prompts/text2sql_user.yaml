@@ -1,0 +1,63 @@
+_type: prompt
+template: |
+    Question: {input}\n\n
+
+    Here is the table schema for analyzing data.
+    Write a SQL query for above question.
+    You must only give me the SQL query (text -> SQL) as the result. You don't need to answer anything else.
+
+    Schema: {schema}\n\n
+
+    ** Cautions **
+      0. 질문에서 특별히 숫자에 대한 요청 (e.g., 상위/하위 N개, 가장 높은/낮은 등)이 없다면, TOP 5 채널까지의 결과(매채명 + 결과값)를 알려줘.
+      1. 유입수(= 방문수)는 count(session), 유입자수(= 방문자수 or 방문자 수)는 count(distinct user), 신규 방문자수는 count(distinct new_user)로 계산해줘
+      2. 정기 후원수는 count(regular_purchase), 일시 후원수는 count(once_purchase)로 계산해줘
+      3. 후원금, 모금액, 후원금액(= 후원 금액, 후원액)을 물어볼 때는 '정기후원 금액'과 '일시후원 금액'을 각각 계산해서 알려줘. 후원수(= 후원 수, 후원건수, 후원 건수)를 물어볼 때는 '정기후원 건수'와 '일시후원 건수'를 각각 계산해서 알려줘.
+      4. 후원자수(= 후원자 수)를 물어보면 '정기후원자 수'와 '일시후원자 수'를 각각 계산해서 알려줘. 그때의 쿼리는 CONCAT(IFNULL(regular_user_id, ''), ' ', IFNULL(once_user_id, '')) 를 사용해줘
+      5. 유입성과 (= 유입 성과)를 물어볼 때는 '방문자수, 세션수(=세션 수)'를 각각 알려줘. 
+      6. 날짜와 시간은 사용자가 물어보는 현재 시간을 기준으로 말하고, 쿼리에 날짜가 지정되지 않은 경우 기본값인 '어제' 기준으로 대답해
+      7. '2024년 10월'처럼 YYYYMM 형태의 날짜를 질문에서 언급하는 경우, 'SUBSTR(event_date, 1, 6)'과 같이 SUBSTR 구문을 사용해서 YYYYMM가 일치하는 데이터를 기준으로 대답해줘
+      8. 전환율에 대해 물어보는 경우, '정기후원'과 '일시후원'의 전환율 모두를 출력해줘. 이 때 정기후원 전환율은 count(regular_purchase)/count(session), 일시후원 전환율은 count(once_purchase)/count(session)로 계산해줘
+      9. WHERE(조건)절에서 특정 문자를 조회할 때, 정확한 값뿐만 아니라 포함된 모든 값을 조회해야 해. 다음 사항을 꼭 지켜줘
+        - `LIKE` 대신 `REGEXP_CONTAINS(column, r'(?i)\\Q패턴\\E')`을 사용 (아래 예시와, Q&A example도 참고해)
+         (e.g., `"긴급구호 | 컨선월드와이드"` → `REGEXP_CONTAINS(page_title, r'(?i)\\Q긴급구호 | 컨선월드와이드\\E')`
+         (e.g., `"후원하기"` → `REGEXP_CONTAINS(event_label, r'(?i)\\Q후원하기\\E')`
+      10. GROUP BY를 사용할 때, SELECT 절에서 반환하는 모든 컬럼이 GROUP BY에 포함되도록 SQL 구문을 생성해줘
+      11. 기간 간 비교를 물어보는 경우 (e.g., YYYYMM X 대비 YYYYMM Y 형식), YYYYMM에 대한 X, Y를 각각 계산하는 것을 잊지 마
+      12. 상위/하위 n개, 혹은 응답의 개수를 유저가 특정해서 물어보는 경우를 제외하고, 질문을 물어봤을 때 임의로 LIMIT 조건을 걸어서 답변을 한정하지 말아줘
+      13. 후원의도를 물어보는 경우, source_report 테이블의 'begin_checkout' 컬럼을 이용해서 SUM함수를 사용해서 계산해줘
+      14. '평균 체류시간'과 같이 기존 지표에 평균 값을 요구하는 경우, avg(지표)를 사용하기 보다는 다음 예시를 보며 sum/count 형식으로 구현해줘. (e.g., 평균 체류시간: SUM(average_engagement_time_per_user) / COUNT(DISTINCT user), 평균 정기후원 금액: SUM(regular_value) / COUNT(regular_purchase))
+      15. 후원성과(=후원 성과)를 물어볼 때는 '정기후원 금액, 일시후원 금액, 정기후원 건수, 일시후원 건수'를 모두 각각 알려줘.
+
+    ** 비율 계산 지침
+    비율 분석을 요청 받았을 경우 다음 지침을 따르세요.
+    - **전체값과 대상값을 모두 추출한 뒤, 비율을 계산합니다.**
+    - 전체값과 대상값은 각각 `AS` 별칭을 부여합니다.
+    - 비율은 `대상값 * 1.0 / NULLIF(전체값, 0)` 형태로 계산하여 나누기 0 오류를 방지합니다.
+    - 반환 항목은 반드시 다음 3개입니다.
+      - 전체값 (예: `total_visitors`)
+      - 대상값 (예: `new_visitors`)
+      - 전체 대비 비율 (예: `new_visitor_ratio`)
+
+    ** 퍼널분석용 지침 **
+    퍼널 분석을 요청 받았을 경우, 다음 항목을 포함하여 SQL을 생성하세요. 후원의도수(begin_checkout)는 SUM을 사용합니다.
+    • session_count (세션 수)
+    • intent_count (후원의도 수)
+    • regular_support_count (정기후원 수)
+    • once_support_count (일시후원 수)
+    • intent_rate: 세션 대비 후원의도 전환율
+    • support_rate: 후원의도 대비 전체 후원(정기+일시) 전환율
+    • regular_rate: 후원의도 대비 정기후원 전환율
+    • once_rate: 후원의도 대비 일시후원 전환율
+
+    전환율 계산에 반드시 SAFE_DIVIDE()를 사용할 것
+    단위는 퍼센트이며 소수점 1자리까지 출력하도록 ROUND(..., 1) 사용
+
+    ** Examples **
+    {examples}
+
+    SQL query:
+input_variables:
+    - schema
+    - input
+    - examples 
