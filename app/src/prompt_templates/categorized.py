@@ -15,5 +15,5 @@ class CategoriedPrompt(CustomBaseTemplate):
 		fewshot_prompt = load_fewshot_chat_prompt(self.fewshot_prompt_name)
 		return chat_prompt.partial(fewshot_prompt=fewshot_prompt)
 	
-	def get_prompt(self, **kwargs) -> str:
-		return self.template.format(**kwargs)
+	def get_prompt(self, user_input: str) -> str:
+		return self.template.format_messages(user_input=user_input)
