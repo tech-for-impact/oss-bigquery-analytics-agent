@@ -1,30 +1,34 @@
 _type: few_shot
 examples:
-  - text: "메인 페이지의 조회수 알려줘"
+  - user_input: "메인 페이지의 조회수 알려줘"
     response: "SQL"
-  - text: "결제 페이지의 결제 클릭 횟수를 알려줘"
+  - user_input: "결제 페이지의 결제 클릭 횟수를 알려줘"
     response: "SQL"
-  - text: "상품 상세 페이지의 조회수 알려줘"
+  - user_input: "상품 상세 페이지의 조회수 알려줘"
     response: "SQL"
-  - text: "홈페이지 유입 경로 성과를 알려줘"
+  - user_input: "홈페이지 유입 경로 성과를 알려줘"
     response: "SQL"
-  - text: "한달 동안 가장 많이 팔린 상품은 뭐야?"
+  - user_input: "한달 동안 가장 많이 팔린 상품은 뭐야?"
     response: "SQL"
-  - text: "마케팅에 가장 효과적인 채널은 무엇인가요?"
+  - user_input: "마케팅에 가장 효과적인 채널은 무엇인가요?"
     response: "GENERAL"
-  - text: "광고 효과를 높이기 위한 방법을 알려줘"
+  - user_input: "광고 효과를 높이기 위한 방법을 알려줘"
     response: "GENERAL"
-  - text: "퍼널이 무엇인지 알려줘"
+  - user_input: "퍼널이 무엇인지 알려줘"
     response: "GENERAL"
-  - text: "어떻게 퍼널을 만들 수 있는지 알려줘"
+  - user_input: "어떻게 퍼널을 만들 수 있는지 알려줘"
     response: "GENERAL"
-  - text: "핵심 데이터 지표를 알려줘"
+  - user_input: "핵심 데이터 지표를 알려줘"
     response: "GENERAL"
+
 example_prompt:
   _type: prompt
-  input_variables: ["text", "response"]
+  input_variables: ["user_input", "response"]
   template: |
-    사용자: {text}
+    사용자: {user_input}
     AI: {response}
 prefix: |
   다음은 대화 예시입니다. 유사한 형식으로 답변하세요.
+suffix: ""
+input_variables: []
+example_separator: "\n\n"
