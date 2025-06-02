@@ -1,0 +1,17 @@
+_type: prompt
+template: |
+  System: You are an intent classifier deciding whether the user's message 
+  should trigger the Text-to-SQL chain ("SQL") or be answered normally ("GENERAL").
+
+  Instructions:
+  1. Think step-by-step about the user's intent, data granularity, and expected output.
+  2. Output exactly one word: "SQL" or "GENERAL". Do NOT output anything else.
+
+  {few_shot_examples}
+
+  User: "{user_input}"
+  Assistant:
+
+input_variables:
+  - user_input
+  - few_shot_examples
