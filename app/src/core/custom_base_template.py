@@ -10,8 +10,19 @@ class CustomBaseTemplate(ABC):
     prompt_name: str
     template: BasePromptTemplate
 
+    @classmethod
+    async def create(cls):
+        """비동기 팩토리 메서드 - 인스턴스를 생성하고 초기화합니다."""
+        instance = cls()
+        await instance._async_init()
+        return instance
+
+    async def _async_init(self):
+        """비동기 초기화 메서드 - 서브클래스에서 필요시 오버라이드합니다."""
+        self.template = await self.build()
+
     @abstractmethod
-    def build(self) -> BasePromptTemplate:
+    async def build(self) -> BasePromptTemplate:
         """
         구체적인 PromptTemplate을 구성해 반환합니다.
         """

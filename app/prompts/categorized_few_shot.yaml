@@ -24,7 +24,9 @@ example_prompt:
   _type: prompt
   input_variables: ["text", "response"]
   template: |
-    사용자: {text}
-    AI: {response}
+    User: {text}
+    Assistant: {response}
 prefix: |
   다음은 대화 예시입니다. 유사한 형식으로 답변하세요.
+suffix: ""
+input_variables: []
