@@ -15,6 +15,6 @@ class CategorizedPrompt(CustomBaseTemplate):
 		fewshot_examples = await load_fewshot_chat_prompt(self.fewshot_prompt_name)
 		return chat_prompt.partial(few_shot_examples=fewshot_examples)
 	
-	def get_prompt(self, user_input: str) -> str:
+	def get_prompt(self) -> PromptTemplate:
 		# format_messages() 대신 format()을 사용하여 문자열을 반환
-		return self.template.format(user_input=user_input)
+		return self.template
