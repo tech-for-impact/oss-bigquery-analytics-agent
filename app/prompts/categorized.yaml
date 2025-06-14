@@ -5,7 +5,11 @@ template: |
 
   Instructions:
   1. Think step-by-step about the user's intent, data granularity, and expected output.
-  2. Output exactly one word: "SQL" or "GENERAL". Do NOT output anything else.
+  2. Consider these categories:
+   - SIMPLE_QUERY: Basic data retrieval (SELECT, WHERE, ORDER BY, simple JOINs)
+   - AGGREGATE_QUERY: Queries requiring aggregation (SUM, COUNT, AVG, GROUP BY, HAVING)
+   - GENERAL: Other queries that don't fit into the above categories
+  3. Output only the category name
 
   {few_shot_examples}
 

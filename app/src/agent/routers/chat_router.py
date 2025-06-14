@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Any, Dict
 
 from src.agent.schemas.chat_request import ChatRequest
-from src.agent.graphs.sql_or_chat_Intent import sql_or_chat_intent_chain
+from src.agent.graphs.text_to_sql_graph import text_to_sql_graph
 
 router = APIRouter()
 router = APIRouter(
@@ -17,16 +17,16 @@ class SqlChatIntentResponse(BaseModel):
 	message: str
 	data: Dict[str, Any]
 
-@router.post("/sql-chat-intent", response_model=SqlChatIntentResponse)
-def sql_chat_intent(request: ChatRequest) -> SqlChatIntentResponse:
-	answer = sql_or_chat_intent_chain(request.input)
+@router.post("/invoke", response_model=SqlChatIntentResponse)
+def invoke(request: ChatRequest) -> SqlChatIntentResponse:
+	answer = text_to_sql_graph(request.input)
+	output = answer.get("messages", [])[-1]["content"]
 
 	return SqlChatIntentResponse(
 		status="ok",
 		message="success",
 		data={
-			"intent": "sql_chat_intent",
 			"input": request.input,
-			"output": answer,
+			"output": output,
 		}
 	)
